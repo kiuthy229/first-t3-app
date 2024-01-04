@@ -1,12 +1,11 @@
-import { signIn, signOut } from "next-auth/react";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "~/server/auth";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { VscAccount, VscHome, VscSignIn, VscSignOut } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 
 export function SideNav() {
-  const session = getServerSession(authOptions);
+  const session = useSession();
+  const user = session.data?.user;
 
   return (
     <nav className="sticky top-0 px-2 py-4">
@@ -21,7 +20,7 @@ export function SideNav() {
             </IconHoverEffect>
           </Link>
         </li>
-        {/* {user != null && (
+        {user != null && (
           <li>
             <Link href={`/profiles/${user.id}`}>
               <IconHoverEffect>
@@ -59,7 +58,7 @@ export function SideNav() {
               </IconHoverEffect>
             </button>
           </li>
-        )} */}
+        )}
       </ul>
     </nav>
   );

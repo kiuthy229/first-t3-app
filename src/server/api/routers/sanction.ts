@@ -5,10 +5,16 @@ export const sanctionRouter = createTRPCRouter({
   getSanctionResult: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id }, ctx }) => {
-      // const currentSanctionId = id;
-      // const sanction = await ctx.db.sanctionResult.findMany()
-      // if (sanction == null) return "";
+      const sanction = await ctx.prisma.sanctionResult.findUnique({
+        where: { id },
+        select: {
+          id: true,
+        },
+      });
+      if (sanction == null) return "";
 
-      return "";
+      return {
+        id: sanction.id
+      };
     }),
 });

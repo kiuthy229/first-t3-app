@@ -7,8 +7,14 @@ import {
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 
-import { env } from "~/env";
-import { db } from "~/server/db";
+// import { env } from "~/env";
+import { prisma } from "~/server/db";
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+
+const DISCORD_CLIENT_ID = publicRuntimeConfig.DISCORD_CLIENT_ID
+const DISCORD_CLIENT_SECRET = publicRuntimeConfig.DISCORD_CLIENT_SECRET
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -46,11 +52,11 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   },
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(prisma),
   providers: [
     DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+      clientId: DISCORD_CLIENT_ID,
+      clientSecret: DISCORD_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.

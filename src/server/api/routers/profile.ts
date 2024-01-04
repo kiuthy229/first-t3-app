@@ -1,5 +1,3 @@
-import { Prisma } from "@prisma/client";
-import { inferAsyncReturnType } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -13,7 +11,7 @@ export const profileRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id }, ctx }) => {
       const currentUserId = ctx.session?.user.id;
-      const profile = await ctx.db.user.findUnique({
+      const profile = await ctx.prisma.user.findUnique({
         where: { id },
         select: {
           name: true,
@@ -41,27 +39,27 @@ export const profileRouter = createTRPCRouter({
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ input: { userId }, ctx }) => {
       const currentUserId = ctx.session.user.id;
-      const existingFollow = await ctx.db.user.findFirst({
+      const existingFollow = await ctx.prisma.user.findFirst({
         where: { id: userId, followers: { some: { id: currentUserId } } },
       });
 
       let addedFollow;
       if (existingFollow == null) {
-        await ctx.db.user.update({
+        await ctx.prisma.user.update({
           where: { id: userId },
           data: { followers: { connect: { id: currentUserId } } },
         });
         addedFollow = true;
       } else {
-        await ctx.db.user.update({
+        await ctx.prisma.user.update({
           where: { id: userId },
           data: { followers: { disconnect: { id: currentUserId } } },
         });
         addedFollow = false;
       }
 
-      // void ctx.revalidateSSG?.(`/profiles/${userId}`);
-      // void ctx.revalidateSSG?.(`/profiles/${currentUserId}`);
+      void ctx.revalidateSSG?.(`/profiles/${userId}`);
+      void ctx.revalidateSSG?.(`/profiles/${currentUserId}`);
 
       return { addedFollow };
     }),

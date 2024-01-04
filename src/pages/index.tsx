@@ -36,43 +36,43 @@ const Home: NextPage = () => {
         )}
       </header>
       <NewTweetForm />
-      {/* {selectedTab === "Recent" ? <RecentTweets /> : <FollowingTweets />} */}
+      {selectedTab === "Recent" ? <RecentTweets /> : <FollowingTweets />}
     </>
   );
 };
 
-// function RecentTweets() {
-//   const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
-//     {},
-//     { getNextPageParam: (lastPage) => lastPage.nextCursor }
-//   );
+function RecentTweets() {
+  const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
+    {},
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
 
-//   return (
-//     <InfiniteTweetList
-//       tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
-//       isError={tweets.isError}
-//       isLoading={tweets.isLoading}
-//       hasMore={tweets.hasNextPage}
-//       fetchNewTweets={tweets.fetchNextPage}
-//     />
-//   );
-// }
+  return (
+    <InfiniteTweetList
+      tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
+      isError={tweets.isError}
+      isLoading={tweets.isLoading}
+      hasMore={tweets.hasNextPage}
+      fetchNewTweets={tweets.fetchNextPage}
+    />
+  );
+}
 
-// function FollowingTweets() {
-//   const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
-//     { onlyFollowing: true },
-//     { getNextPageParam: (lastPage) => lastPage.nextCursor }
-//   );
+function FollowingTweets() {
+  const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
+    { onlyFollowing: true },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
 
-//   return (
-//     <InfiniteTweetList
-//       tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
-//       isError={tweets.isError}
-//       isLoading={tweets.isLoading}
-//       hasMore={tweets.hasNextPage}
-//       fetchNewTweets={tweets.fetchNextPage}
-//     />
-//   );
-// }
+  return (
+    <InfiniteTweetList
+      tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
+      isError={tweets.isError}
+      isLoading={tweets.isLoading}
+      hasMore={tweets.hasNextPage}
+      fetchNewTweets={tweets.fetchNextPage}
+    />
+  );
+}
 
 export default Home;
